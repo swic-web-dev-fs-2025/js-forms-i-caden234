@@ -1,6 +1,6 @@
 import "./style.css";
 
-const REQUIRED = ["name", "email", "message"];
+const REQUIRED = ["name", "email", "password", "confirmPassword"];
 
 const form = document.querySelector("form");
 const result = document.querySelector("#result");
@@ -17,20 +17,23 @@ form.addEventListener("input", () => {
     : (submitBtn.disabled = true); // If no, disable button
 });
 
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const formData = new FormData(form);
-  const data = Object.fromEntries(formData);
-
-  // Pass the data object to the Results function to get HTML! 🚀
-  result.innerHTML = Results(data);
+// make sure that the password and confirm password fields match before enabling the submit button
+const passwordField = form.querySelector("#password");
+const confirmPasswordField = form.querySelector("#confirmPassword");
+form.addEventListener("input", () => {
+  const passwordsMatch = passwordField.value === confirmPasswordField.value;
+  if (!passwordsMatch) {
+    confirmPasswordField.setCustomValidity("Passwords do not match");
+  } else {
+    confirmPasswordField.setCustomValidity("");
+  }
 });
-
-function Results(data) {
-  return `<ul class="space-y-1 text-sm">
-        ${Object.entries(data)
-          .map(([k, v]) => `<li><strong>${k}:</strong> ${v}</li>`)
-          .join("")}
-    </ul>   
-    `;
-}
+// If the password and confirmPassword fields do not match, display an error message in the <output> tag. If they do match, clear any error message.
+form.addEventListener("input", () => {
+  const passwordsMatch = passwordField.value === confirmPasswordField.value;
+  if (!passwordsMatch) {
+    result.innerHTML = `<p class="text-red-500 space-y-4 mx-auto max-w-md rounded border">Passwords do not match</p>`;
+  } else {
+    result.innerHTML = "";
+  }
+});
