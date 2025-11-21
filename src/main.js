@@ -1,7 +1,13 @@
 import "./style.css";
 
-document.querySelector("#app").innerHTML = `
-  <h1 class="text-3xl font-bold underline">
-    Hello Vite!
-  </h1>
-`;
+const form = document.querySelector("form");
+
+// Same pattern as 'clicks', but for 'submit' events.
+form.addEventListener("submit", (event) => {
+  // No, browser! WE will handle this. Stop your default behavior.
+  event.preventDefault();
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData);
+
+  console.log(data);
+});
